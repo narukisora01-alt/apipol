@@ -7,11 +7,25 @@ export default async function handler(req, res) {
   
   try {
     const response = await fetch(
-      `https://api.polytoria.com/v1/users/${userId}/store?page=${page}&limit=${limit}`
+      `https://api.polytoria.com/v1/users/${userId}/store?page=${page}&limit=${limit}`,
+      {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0',
+          'Accept': 'application/json,*/*',
+          'Referer': 'https://api.polytoria.com/',
+          'sec-ch-ua': '"Not(A:Brand";v="8", "Chromium";v="144", "Microsoft Edge";v="144"',
+          'sec-ch-ua-mobile': '?0',
+          'sec-ch-ua-platform': '"Windows"'
+        }
+      }
     );
     
     if (!response.ok) {
-      return res.status(response.status).json({ error: 'Failed to fetch from Polytoria API' });
+      return res.status(response.status).json({ 
+        error: 'Failed to fetch from Polytoria API',
+        status: response.status,
+        statusText: response.statusText
+      });
     }
     
     const data = await response.json();
