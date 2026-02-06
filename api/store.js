@@ -6,29 +6,40 @@ export default async function handler(req, res) {
   }
   
   try {
-    const response = await fetch(
-      `https://api.polytoria.com/v1/users/${userId}/store?page=${page}&limit=${limit}`,
-      {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0',
-          'Accept': 'application/json,*/*',
-          'Referer': 'https://api.polytoria.com/',
-          'sec-ch-ua': '"Not(A:Brand";v="8", "Chromium";v="144", "Microsoft Edge";v="144"',
-          'sec-ch-ua-mobile': '?0',
-          'sec-ch-ua-platform': '"Windows"'
-        }
+    const url = `https://api.polytoria.com/v1/users/${userId}/store?page=${page}&limit=${limit}`;
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36 Edg/144.0.0.0',
+        'Accept': 'application/json,*/*',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Referer': 'https://api.polytoria.com/',
+        'Origin': 'https://api.polytoria.com',
+        'sec-ch-ua': '"Not(A:Brand";v="8", "Chromium";v="144", "Microsoft Edge";v="144"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+        'sec-fetch-dest': 'empty',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-site': 'same-origin',
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache'
       }
-    );
+    });
+    
+    const responseText = await response.text();
     
     if (!response.ok) {
       return res.status(response.status).json({ 
         error: 'Failed to fetch from Polytoria API',
         status: response.status,
-        statusText: response.statusText
+        statusText: response.statusText,
+        body: responseText.substring(0, 200)
       });
     }
     
-    const data = await response.json();
+    const data = JSON.parse(responseText);
     const categories = {};
     
     if (data.assets) {
