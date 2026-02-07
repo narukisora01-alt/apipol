@@ -1,289 +1,138 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polytoria Store Viewer</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-            font-size: 2.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .search-box {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            margin-bottom: 30px;
-        }
-
-        .input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        input {
-            flex: 1;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: border 0.3s;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        button {
-            padding: 15px 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        .loading {
-            text-align: center;
-            color: white;
-            font-size: 1.5rem;
-            padding: 40px;
-        }
-
-        .error {
-            background: #ff4757;
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .results {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .stats {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 10px;
-        }
-
-        .stats h2 {
-            font-size: 2rem;
-        }
-
-        .category {
-            margin-bottom: 40px;
-        }
-
-        .category h3 {
-            color: #667eea;
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #667eea;
-        }
-
-        .assets-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .asset-card {
-            background: #f8f9fa;
-            border-radius: 10px;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .asset-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-
-        .asset-thumbnail {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            background: #e0e0e0;
-        }
-
-        .asset-info {
-            padding: 15px;
-        }
-
-        .asset-name {
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin-bottom: 8px;
-            color: #333;
-        }
-
-        .asset-details {
-            display: flex;
-            justify-content: space-between;
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .price {
-            color: #27ae60;
-            font-weight: bold;
-        }
-
-        .price.free {
-            color: #95a5a6;
-        }
-    </style>
+<title>Converter</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
+@keyframes glow{0%,100%{box-shadow:0 0 40px rgba(255,255,255,0.1)}50%{box-shadow:0 0 80px rgba(255,255,255,0.3)}}
+@keyframes shimmer{0%{background-position:200% center}100%{background-position:-200% center}}
+@keyframes reveal{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:radial-gradient(circle at 20% 30%,#1a1a1a,#000 60%);min-height:100vh;font-family:'Helvetica Neue',Arial,sans-serif;color:#fff;position:relative;overflow-x:hidden}
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;padding:40px 20px}
+.top{text-align:center;padding:80px 20px 60px;position:relative}
+.top::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(255,255,255,0.08),transparent 70%);pointer-events:none;z-index:-1}
+h1{font-size:5.5rem;font-weight:900;background:linear-gradient(135deg,#fff 0%,#666 50%,#fff 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:15px;letter-spacing:-4px;animation:shimmer 8s linear infinite}
+.sub{font-size:1.2rem;color:#999;font-weight:300;letter-spacing:3px;text-transform:uppercase}
+.main{max-width:900px;margin:60px auto;animation:reveal 0.8s ease}
+.zone{background:rgba(255,255,255,0.03);backdrop-filter:blur(20px);border:2px solid rgba(255,255,255,0.1);border-radius:30px;padding:80px 60px;text-align:center;cursor:pointer;transition:all 0.5s cubic-bezier(0.34,1.56,0.64,1);position:relative;overflow:hidden;animation:glow 4s ease-in-out infinite}
+.zone::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,rgba(255,255,255,0.1),transparent);opacity:0;transition:opacity 0.5s}
+.zone:hover::before{opacity:1}
+.zone:hover{transform:translateY(-10px) scale(1.02);border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.08);box-shadow:0 30px 90px rgba(255,255,255,0.2)}
+.ico{width:100px;height:100px;margin:0 auto 30px;background:linear-gradient(135deg,#fff,#666);border-radius:50%;display:flex;align-items:center;justify-content:center;animation:float 3s ease-in-out infinite;box-shadow:0 10px 40px rgba(255,255,255,0.3)}
+.zone:hover .ico{animation:none;transform:scale(1.15) rotate(10deg)}
+.ico svg{width:50px;height:50px;fill:#000}
+.txt{font-size:2rem;font-weight:700;margin-bottom:10px;letter-spacing:-1px}
+.hint{color:#888;font-size:1.1rem;font-weight:300}
+#inp,#src{display:none}
+.out{margin-top:80px;animation:reveal 1s ease 0.3s both}
+.label{text-align:center;font-size:1.5rem;font-weight:700;margin-bottom:40px;letter-spacing:5px;text-transform:uppercase;color:#666}
+.box{background:rgba(255,255,255,0.05);backdrop-filter:blur(30px);border:2px solid rgba(255,255,255,0.15);border-radius:25px;padding:50px;box-shadow:0 20px 80px rgba(0,0,0,0.6)}
+.box canvas{width:100%;height:auto;border-radius:15px;display:block;box-shadow:0 15px 50px rgba(0,0,0,0.8)}
+@media(max-width:768px){
+h1{font-size:3.5rem;letter-spacing:-2px}
+.zone{padding:50px 30px}
+.ico{width:70px;height:70px}
+.ico svg{width:35px;height:35px}
+.txt{font-size:1.5rem}
+.box{padding:25px}
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎮 Polytoria Store Viewer</h1>
-        
-        <div class="search-box">
-            <div class="input-group">
-                <input type="number" id="userId" placeholder="Enter User ID (e.g., 308475)" value="308475">
-                <button onclick="fetchStore()">🔍 View Store</button>
-            </div>
-        </div>
-
-        <div id="loading" class="loading" style="display: none;">
-            Loading assets...
-        </div>
-
-        <div id="error" class="error" style="display: none;"></div>
-
-        <div id="results" style="display: none;"></div>
-    </div>
-
-    <script>
-        async function fetchStore() {
-            const userId = document.getElementById('userId').value;
-            
-            if (!userId) {
-                showError('Please enter a User ID');
-                return;
-            }
-
-            document.getElementById('loading').style.display = 'block';
-            document.getElementById('error').style.display = 'none';
-            document.getElementById('results').style.display = 'none';
-
-            try {
-                const response = await fetch(`/api/store?userId=${userId}`);
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.error || 'Failed to fetch store');
-                }
-
-                displayResults(data);
-            } catch (error) {
-                showError(error.message);
-            } finally {
-                document.getElementById('loading').style.display = 'none';
-            }
-        }
-
-        function showError(message) {
-            const errorDiv = document.getElementById('error');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-        }
-
-        function displayResults(data) {
-            const resultsDiv = document.getElementById('results');
-            
-            let html = `
-                <div class="stats">
-                    <h2>User ID: ${data.userId}</h2>
-                    <p>Total Assets: ${data.total}</p>
-                </div>
-            `;
-
-            for (const [category, assets] of Object.entries(data.categories)) {
-                html += `
-                    <div class="category">
-                        <h3>${category}</h3>
-                        <div class="assets-grid">
-                `;
-
-                assets.forEach(asset => {
-                    const isFree = asset.price === 'Free';
-                    html += `
-                        <div class="asset-card">
-                            <img src="${asset.thumbnail}" alt="${asset.name}" class="asset-thumbnail" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23ddd%22 width=%22200%22 height=%22200%22/%3E%3C/svg%3E'">
-                            <div class="asset-info">
-                                <div class="asset-name">${asset.name}</div>
-                                <div class="asset-details">
-                                    <span>ID: ${asset.id}</span>
-                                    <span class="price ${isFree ? 'free' : ''}">${asset.price}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-
-                html += `
-                        </div>
-                    </div>
-                `;
-            }
-
-            resultsDiv.innerHTML = html;
-            resultsDiv.style.display = 'block';
-        }
-
-        // Auto-fetch on page load if userId is preset
-        window.onload = () => {
-            if (document.getElementById('userId').value) {
-                fetchStore();
-            }
-        };
-    </script>
+<div class="wrap">
+<div class="top">
+<h1>CONVERTER</h1>
+<p class="sub">Roblox to Polytoria</p>
+</div>
+<div class="main">
+<div class="zone" id="btn">
+<div class="ico">
+<svg viewBox="0 0 24 24">
+<path d="M11 15h2V9h3l-4-5-4 5h3zm-1 4h4v-2h-4z"/>
+</svg>
+</div>
+<div class="txt">Drop Your Shirt</div>
+<p class="hint">Click to browse or drag file</p>
+</div>
+<input type="file" accept="image/*" id="inp">
+<canvas id="src" width="1024" height="1024"></canvas>
+<div class="out">
+<div class="label">Output</div>
+<div class="box">
+<canvas id="dst" width="1024" height="1024"></canvas>
+</div>
+</div>
+</div>
+</div>
+<script>
+const s=document.getElementById('src');
+const sc=s.getContext('2d');
+const d=document.getElementById('dst');
+const dc=d.getContext('2d');
+const i=document.getElementById('inp');
+const b=document.getElementById('btn');
+i.addEventListener('change',h);
+b.addEventListener('click',()=>i.click());
+b.addEventListener('dragover',e=>e.preventDefault());
+b.addEventListener('drop',e=>{
+e.preventDefault();
+const f=e.dataTransfer.files[0];
+if(f){i.files=e.dataTransfer.files;h({target:i});}
+});
+function h(e){
+const f=e.target.files[0];
+if(!f)return;
+const r=new FileReader();
+r.onload=ev=>{
+const m=new Image();
+m.onload=()=>{
+sc.clearRect(0,0,1024,1024);
+sc.drawImage(m,0,0);
+p();
+};
+m.src=ev.target.result;
+};
+r.readAsDataURL(f);
+}
+function p(){
+const g=[
+{cx:231,cy:74,cw:128,ch:128,px:199,py:184,rw:202,rh:202},
+{cx:231,cy:8,cw:128,ch:64,px:199,py:74,rw:202,rh:102},
+{cx:231,cy:204,cw:128,ch:64,px:199,py:395,rw:202,rh:102},
+{cx:165,cy:74,cw:64,ch:128,px:89,py:184,rw:102,rh:202},
+{cx:361,cy:74,cw:64,ch:128,px:409,py:184,rw:102,rh:202},
+{cx:427,cy:74,cw:128,ch:128,px:519,py:184,rw:202,rh:202},
+{cx:217,cy:289,cw:64,ch:64,px:382,py:557,rw:102,rh:102},
+{cx:217,cy:355,cw:64,ch:128,px:382,py:667,rw:102,rh:202},
+{cx:151,cy:355,cw:64,ch:128,px:272,py:667,rw:102,rh:202},
+{cx:85,cy:355,cw:64,ch:128,px:162,py:667,rw:102,rh:202},
+{cx:19,cy:355,cw:64,ch:128,px:52,py:667,rw:102,rh:202},
+{cx:217,cy:485,cw:64,ch:64,px:382,py:877,rw:102,rh:102},
+{cx:308,cy:289,cw:64,ch:64,px:538,py:557,rw:102,rh:102},
+{cx:308,cy:355,cw:64,ch:128,px:538,py:667,rw:102,rh:202},
+{cx:374,cy:355,cw:64,ch:128,px:649,py:667,rw:102,rh:202},
+{cx:440,cy:355,cw:64,ch:128,px:759,py:667,rw:102,rh:202},
+{cx:506,cy:355,cw:64,ch:128,px:870,py:667,rw:102,rh:202},
+{cx:308,cy:485,cw:64,ch:64,px:538,py:877,rw:102,rh:102}
+];
+sc.imageSmoothingEnabled=true;
+g.forEach(o=>{
+const t=document.createElement('canvas');
+t.width=o.rw;
+t.height=o.rh;
+const c=t.getContext('2d');
+c.imageSmoothingEnabled=true;
+c.drawImage(s,o.cx,o.cy,o.cw,o.ch,0,0,o.rw,o.rh);
+dc.putImageData(c.getImageData(0,0,o.rw,o.rh),o.px,o.py);
+});
+const a=document.createElement('a');
+a.href=d.toDataURL('image/png');
+a.download='converted.png';
+a.click();
+}
+</script>
 </body>
 </html>
